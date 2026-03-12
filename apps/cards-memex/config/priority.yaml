@@ -1,0 +1,80 @@
+# Thread Priority/Weights Configuration
+# Controls how different threads are weighted in retrieval
+# Higher weight = more likely to appear in results
+
+# Default weight for all threads (baseline)
+default_weight: 1.0
+
+# Topic-based weights (from role.yaml topics)
+# Decisions and final outcomes should rank higher than exploratory discussions
+topic_weights:
+  "GTM Plan": 1.5          # Concrete plans are high value
+  "Risk Review": 1.4       # Risk decisions are critical
+  "Legal/Contract": 1.5    # Legal decisions are binding
+  "Pricing Simulation": 1.3
+  "Status Update": 0.8     # Status updates are ephemeral
+  "Tech Feasibility": 1.2
+  "Funnel Analysis": 1.1
+  "Marketing Copy": 0.9    # Usually iterative, less "final"
+
+# Theme-based weights (from role.yaml themes)
+theme_weights:
+  "P&L & Financials": 1.4      # Financial info is critical
+  "Portfolio Strategy": 1.2
+  "CVP & Economics": 1.3
+  "Growth Execution": 1.1
+  "Network Partnerships": 1.3  # Deal terms matter
+
+# Product-based weights
+product_weights:
+  "Credit Cards (CC)": 1.0
+  "Debit Cards (DC)": 1.0
+  "Cross-Portfolio (Both)": 1.1  # Cross-portfolio is often strategic
+
+# Channel-based weights (channel IDs)
+# Add your high-priority channels here
+channel_weights:
+  # Example: Executive/leadership channels
+  # "C000EXAMPLE1": 1.5
+  # Example: Decision-making channels
+  # "C012345ABCD": 1.4
+  default: 1.0
+
+# Content pattern weights
+# Applied when thread content matches certain patterns
+content_patterns:
+  - pattern: "(?i)\\b(decided|decision|approved|confirmed|final)\\b"
+    weight: 1.6
+    reason: "Contains decision language"
+  
+  - pattern: "(?i)\\b(action item|next step|owner|deadline)\\b"
+    weight: 1.4
+    reason: "Contains action items"
+  
+  - pattern: "(?i)\\b(fyi|heads up|update|sharing)\\b"
+    weight: 0.8
+    reason: "Informational only"
+  
+  - pattern: "(?i)\\b(brainstorm|thinking|maybe|could be)\\b"
+    weight: 0.7
+    reason: "Exploratory discussion"
+  
+  - pattern: "(?i)\\b(blocked|blocker|issue|problem|urgent)\\b"
+    weight: 1.3
+    reason: "Contains blockers/issues"
+
+# Project-specific weights (override for specific projects)
+project_weights:
+  # Example: High-priority initiatives
+  # "Visa Infinite": 1.3
+  # "DC International": 1.2
+  "Ad-hoc": 0.9  # Ad-hoc discussions slightly lower priority
+
+# Combination rules
+# How to combine multiple weights (multiply vs max vs average)
+combination_method: "multiply"  # Options: "multiply", "max", "average"
+
+# Weight caps to prevent runaway scoring
+min_weight: 0.5
+max_weight: 3.0
+

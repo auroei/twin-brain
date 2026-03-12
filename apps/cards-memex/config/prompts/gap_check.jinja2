@@ -1,0 +1,35 @@
+Analyze if this user query falls into a known gap or out-of-scope category.
+
+## User Query
+{{ query }}
+
+## Known Gaps (topics we can't answer)
+{% for gap in known_gaps %}
+- **{{ gap.topic }}**: keywords = {{ gap.keywords | join(', ') }}
+{% endfor %}
+
+## Out-of-Scope Topics
+{% for scope in out_of_scope %}
+- **{{ scope.topic }}**: keywords = {{ scope.keywords | join(', ') }}
+{% endfor %}
+
+## Instructions
+1. Check if the query matches any known gap or out-of-scope topic
+2. If it matches, return the category and type
+3. If it doesn't match any, return "none"
+
+## Output
+Respond with JSON inside <result> tags:
+
+If matched:
+<result>
+{"matched": true, "type": "known_gap" or "out_of_scope", "topic": "matched topic name"}
+</result>
+
+If not matched:
+<result>
+{"matched": false}
+</result>
+
+<result>
+

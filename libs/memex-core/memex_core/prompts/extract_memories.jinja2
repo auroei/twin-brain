@@ -1,0 +1,53 @@
+Extract atomic memories from this Slack thread. Each memory should be a single, self-contained fact.
+
+## Rules for Atomic Memories:
+1. Each memory = ONE fact that can stand alone
+2. RESOLVE all pronouns and references (replace "he/she/they/it/this/that" with actual names)
+3. Include relevant context so the fact is unambiguous
+4. Extract temporal information: when did the event HAPPEN (not when it was discussed)
+
+## Document Date: {{ document_date }}
+(This is when the conversation occurred - use for relative date calculations like "yesterday", "last week")
+
+{% if domain_context %}
+## Domain Context:
+{{ domain_context }}
+{% endif %}
+
+## Thread Content:
+{{ thread_text }}
+
+## Output Format:
+Return a JSON array inside <memories> tags. Each memory object should have:
+- "fact": The self-contained atomic fact (string)
+- "entities": List of people, projects, products mentioned (array of strings)
+- "event_dates": List of ISO dates when the event occurred/will occur (array of strings, can be empty)
+- "is_future": Whether this is about a future event (boolean)
+- "temporal_refs": Raw temporal phrases found like "next week", "Q2" (array of strings)
+- "confidence": How confident you are this is a real fact vs speculation (0.0-1.0)
+
+<memories>
+[
+  {
+    "fact": "John recommended the mobile-first approach for the Q3 product launch",
+    "entities": ["John", "Q3 product launch"],
+    "event_dates": ["2024-07-01"],
+    "is_future": true,
+    "temporal_refs": ["Q3"],
+    "confidence": 0.95
+  },
+  {
+    "fact": "The team decided to increase the marketing budget from $50k to $75k",
+    "entities": ["marketing budget"],
+    "event_dates": [],
+    "is_future": false,
+    "temporal_refs": [],
+    "confidence": 1.0
+  }
+]
+</memories>
+
+Extract all meaningful facts from the thread. Skip greetings, acknowledgments, and off-topic chatter.
+Focus on: decisions, facts, plans, status updates, action items, preferences stated.
+
+<memories>

@@ -1,0 +1,35 @@
+role: "Cards Strategy Lead"
+
+# Dimension 1: Product Scope
+products:
+  - "Credit Cards (CC)"
+  - "Debit Cards (DC)"
+  - "Cross-Portfolio (Both)"
+
+# Dimension 2: Themes (L0 Strategy Areas)
+themes:
+  - name: "P&L & Financials"
+    description: "Revenue, cost of funds, yield, margins, budget planning."
+  
+  - name: "Portfolio Strategy"
+    description: "Segmentation, book growth, retention, spend stimulation."
+  
+  - name: "CVP & Economics"
+    description: "New offers, LTV/CAC simulations, unit economics, testing."
+  
+  - name: "Growth Execution"
+    description: "Program management, GTM, Xfn delivery, status tracking."
+  
+  - name: "Network Partnerships"
+    description: "Deals and negotiations with Visa/Mastercard/RuPay."
+
+# Dimension 3: Topics (Work Types)
+topics:
+  - "GTM Plan"
+  - "Funnel Analysis"
+  - "Risk Review"
+  - "Legal/Contract"
+  - "Pricing Simulation"
+  - "Marketing Copy"
+  - "Tech Feasibility"
+  - "Status Update"

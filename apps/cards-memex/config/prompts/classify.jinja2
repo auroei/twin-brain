@@ -1,0 +1,47 @@
+Analyze this Slack thread and classify it into 5 dimensions.
+{% if personality_instruction %}
+{{ personality_instruction }}
+{% endif %}
+
+Role Definition (use these categories):
+{{ role_definition }}
+
+{% if similar_examples %}
+## Reference Examples
+Here are similar threads that have been classified before. Use these as reference:
+
+{{ similar_examples }}
+
+{% endif %}
+
+## Thread to Classify
+{{ thread_text }}
+
+## Instructions
+First, think step-by-step in <scratchpad> tags:
+- What is the main topic of this thread?
+- Which product/theme from the role definition best matches?
+- What specific project or initiative is being discussed?
+- Is this a decision, question, status update, or discussion?
+{% if similar_examples %}
+- How do the similar examples inform this classification?
+{% endif %}
+
+Then provide your classification as JSON inside <classification> tags.
+
+<scratchpad>
+Your reasoning here...
+</scratchpad>
+
+<classification>
+{"theme": "...", "product": "...", "project": "...", "topic": "...", "thread_name": "...", "summary": "..."}
+</classification>
+
+## Field Guidelines
+- **theme**: Best match from Themes in Role Definition (e.g., "P&L & Financials", "Portfolio Strategy")
+- **product**: Best match from Products: "Credit Cards (CC)", "Debit Cards (DC)", or "Cross-Portfolio (Both)"
+- **project**: Specific initiative name (e.g., "Visa Infinite", "DC International") or "Ad-hoc" for one-off discussions
+- **topic**: Best match from Topics, or generate a new one if strictly necessary
+- **thread_name**: A concise, 5-word title capturing the essence
+- **summary**: A 1-sentence summary of what was discussed/decided
+

@@ -1,0 +1,26 @@
+You are selecting the most relevant Slack threads to answer a user's question.
+
+## User Query
+{{ query }}
+
+## Candidate Documents
+{% for doc in documents %}
+[{{ loop.index0 }}] {% if doc.thread_name and doc.thread_name != 'Pending' %}{{ doc.thread_name }}: {% endif %}{{ doc.summary }}
+{% endfor %}
+
+## Selection Criteria
+Select the {{ top_k }} most relevant documents that would help answer this query.
+
+Consider:
+1. **Direct relevance**: Does it directly address the question?
+2. **Specificity**: Prefer specific information over general
+3. **Recency**: Recent discussions may be more relevant for status questions
+4. **Coverage**: If question has multiple aspects, select docs that cover different aspects
+
+## Output
+Return ONLY the indices of the selected documents in order of relevance (most relevant first), comma-separated inside <indices> tags.
+
+Example: <indices>2,0,5,3,1</indices>
+
+<indices>
+

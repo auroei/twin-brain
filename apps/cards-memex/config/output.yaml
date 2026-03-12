@@ -1,0 +1,38 @@
+# Output configuration for response formatting
+# This file controls HOW the bot responds, not WHAT it knows
+
+# Response length control
+length:
+  default: "concise"  # Options: "concise", "detailed", "auto"
+  max_chars: 800      # Hard cap on response length (chars)
+  concise_target: 200 # Target length for concise mode
+  detailed_target: 600 # Target length for detailed mode
+
+# Response structure
+structure:
+  default: "auto"     # Options: "bullets", "prose", "auto"
+  # "auto" picks bullets for lists/comparisons, prose for explanations
+  bullet_threshold: 3 # Use bullets when ≥3 items to list
+  
+# Citations and source attribution
+citations:
+  enabled: true
+  format: "inline"    # Options: "inline", "footer", "none"
+  # "inline" = mentions source in text
+  # "footer" = adds "Sources: ..." at end
+  max_citations: 3    # Don't overwhelm with too many sources
+
+# Confidence handling
+confidence:
+  threshold: 0.5      # Below this similarity score = low confidence
+  low_confidence_behavior: "qualify"  # Options: "qualify", "refuse", "proceed"
+  # "qualify" = answer but add "I'm not certain, but..."
+  # "refuse" = say "I don't have enough information"
+  # "proceed" = answer anyway (not recommended)
+
+# Formatting preferences
+formatting:
+  use_markdown: true  # Use bold, italics for emphasis
+  use_emoji: false    # Add emoji to responses (separate from reaction emoji)
+  section_headers: false # Add headers for long responses
+

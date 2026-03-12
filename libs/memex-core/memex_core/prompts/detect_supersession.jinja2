@@ -1,0 +1,45 @@
+You are analyzing whether a new thread supersedes (replaces/updates) an existing thread.
+
+New Thread:
+- Title: {{ new_thread.thread_name }}
+- Summary: {{ new_thread.summary }}
+- Project: {{ new_thread.project }}
+- Theme: {{ new_thread.theme }}
+{% if new_thread.document %}
+Content Preview:
+{{ new_thread.document[:800] }}
+{% endif %}
+
+---
+
+Existing Thread:
+- Title: {{ existing_thread.thread_name }}
+- Summary: {{ existing_thread.summary }}
+- Project: {{ existing_thread.project }}
+- Theme: {{ existing_thread.theme }}
+{% if existing_thread.document %}
+Content Preview:
+{{ existing_thread.document[:800] }}
+{% endif %}
+
+---
+
+Determine if the new thread SUPERSEDES the existing thread. A thread supersedes another when:
+1. It provides updated information on the same topic/project
+2. It contradicts or revises a previous decision
+3. It explicitly mentions replacing or updating the previous approach
+4. It represents a newer strategy/plan for the same initiative
+
+Answer ONLY with one of:
+- "SUPERSEDES" - The new thread replaces/updates the existing thread
+- "RELATED" - The threads are related but both remain valid
+- "UNRELATED" - The threads are not related
+
+Then provide a brief explanation.
+
+Example response:
+SUPERSEDES
+The new thread updates the mobile strategy from iOS-first to Android-first, making the previous iOS-first strategy obsolete.
+
+Your response:
+

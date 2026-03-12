@@ -1,0 +1,49 @@
+# Retrieval configuration for memory search
+# Controls HOW the bot searches and ranks results
+
+# Core scoring weights (must sum to ~1.0 for interpretability)
+weights:
+  semantic: 0.7   # Weight for semantic/embedding similarity (0.0 to 1.0)
+  recency: 0.3    # Weight for recency in search (0.0 to 1.0)
+
+# Recency decay configuration  
+recency:
+  full_weight_days: 30    # Threads newer than this get full recency score
+  half_life_days: 60      # Decay half-life (score = 0.5 at this age)
+  min_weight: 0.3         # Floor for recency weight (very old threads)
+  
+# Re-ranker configuration (LLM-based second-pass ranking)
+reranker:
+  enabled: true           # Use LLM to re-rank initial results
+  candidates: 30          # Number of candidates to fetch for re-ranking
+  top_k: 5                # Number of results to keep after re-ranking
+  
+# Context window limits
+context:
+  max_chars: 8000         # Maximum total context length (chars)
+  max_docs: 10            # Maximum number of documents in context
+  truncate_doc_at: 1500   # Truncate individual docs longer than this
+  
+# Initial retrieval settings
+retrieval:
+  default_n_results: 10   # Default number of results to return
+  over_retrieval_factor: 3  # Fetch N*factor candidates before filtering
+
+# Content curation rules
+curation:
+  min_length: 20          # Minimum text length in characters for ingestion
+  skip_bot_messages: true # Don't index messages from bots
+  skip_reactions_only: true # Skip threads that are just emoji reactions
+  
+# Lifecycle filtering
+lifecycle:
+  include_deprecated: false  # Include deprecated threads in normal queries
+  include_draft: true        # Include draft threads
+  deprecated_penalty: 0.3    # Multiply score by this for deprecated threads
+  draft_penalty: 0.7         # Multiply score by this for draft threads
+
+# Duplicate/near-duplicate handling
+deduplication:
+  enabled: true
+  similarity_threshold: 0.95  # Threads more similar than this = duplicates
+  prefer_newer: true          # Keep newer thread when deduplicating

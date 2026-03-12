@@ -1,0 +1,134 @@
+# User Feedback Configuration
+# Controls how feedback is collected, stored, and used
+
+# Storage settings
+storage:
+  file: "feedback_log.jsonl"  # Append-only log of all feedback
+  review_queue: "review_queue.json"  # Pending items for expert review
+
+# Role-based feedback weights (L1 reinforcement)
+# Only Curators and Teachers can give weighted feedback that triggers L2 reinforcement
+weights:
+  curator: 5.0   # Curators get 5x weight on their feedback
+  teacher: 5.0   # Teachers get 5x weight on their feedback
+  user: 1.0      # Users get 1x weight (logged only, no L2 reinforcement)
+
+# L2 Reinforcement: feedback score adjustments for thread ranking
+reinforcement:
+  positive_delta: 0.1   # How much to boost a thread on positive feedback
+  negative_delta: -0.05 # How much to penalize on negative feedback
+  score_min: -1.0       # Minimum feedback_score (floor)
+  score_max: 2.0        # Maximum feedback_score (ceiling)
+
+# Reaction-based feedback (open to all users)
+reactions:
+  enabled: true
+  positive: ["thumbsup", "+1", "white_check_mark", "heart"]
+  negative: ["thumbsdown", "-1", "x", "confused"]
+  # Don't train directly on these - just flag for review
+  use_for_training: false
+
+# Implicit signals (tracked automatically)
+implicit_signals:
+  enabled: true
+  track_followup_questions: true    # User asks another question within 2 min
+  track_rephrases: true             # User rephrases same question
+  track_repeated_questions: true    # Same question asked again later
+  followup_window_seconds: 120      # Window for detecting followups
+  rephrase_similarity_threshold: 0.7  # How similar = rephrase
+
+# Curated review system
+curated_review:
+  enabled: true
+  # Reviewers are curators (experts with domain knowledge)
+  # Set to "curators" to use CURATOR_IDS from .env, or provide a list of user IDs
+  reviewers: "curators"
+  
+  # Sampling strategy
+  sampling:
+    # Review all answers that get negative reactions
+    review_negative_reactions: true
+    # Sample rate for answers without reactions (0.1 = 10%)
+    random_sample_rate: 0.1
+    # Always review answers with low confidence
+    review_low_confidence: true
+    confidence_threshold: 0.5
+  
+  # Review criteria (what experts evaluate)
+  criteria:
+    - id: "correctness"
+      question: "Was the answer factually correct?"
+      options: ["correct", "partially_correct", "incorrect", "unknown"]
+    
+    - id: "completeness"
+      question: "Did it cover the key points?"
+      options: ["complete", "partial", "incomplete"]
+    
+    - id: "confidence_appropriate"
+      question: "Did it express appropriate certainty?"
+      options: ["appropriate", "overconfident", "underconfident"]
+    
+    - id: "format_helpful"
+      question: "Was the format/structure helpful?"
+      options: ["helpful", "neutral", "unhelpful"]
+
+# Review workflow
+review_workflow:
+  # How to notify reviewers of pending reviews
+  notification:
+    enabled: true
+    channel: "dm"  # "dm" = DM each reviewer, or channel ID for shared channel
+    batch_size: 5   # Notify when N items pending
+    max_frequency_hours: 24  # Don't notify more than once per day
+  
+  # Review interface (via DM)
+  interface:
+    prompt: |
+      📋 *Review Request*
+      
+      *Question:* {question}
+      *Answer:* {answer}
+      *Sources:* {source_count} threads
+      *Confidence:* {confidence}
+      
+      Please react:
+      ✅ = Correct & Complete
+      ⚠️ = Partially correct/incomplete  
+      ❌ = Incorrect
+      
+      Or reply with detailed feedback.
+
+# Metrics and reporting
+metrics:
+  # Track these metrics over time
+  track:
+    - positive_reaction_rate
+    - negative_reaction_rate
+    - followup_rate
+    - rephrase_rate
+    - expert_correctness_rate
+  
+  # Generate weekly summary
+  weekly_summary:
+    enabled: true
+    day: "monday"
+    time: "09:00"
+
+# Learning/tuning (how feedback influences the system)
+learning:
+  # Only learn from expert reviews, not open reactions
+  source: "expert_reviews"
+  
+  # What feedback can tune
+  tunable_parameters:
+    - retrieval_weights      # Adjust semantic/recency balance
+    - confidence_threshold   # When to express uncertainty
+    - priority_weights       # Which threads matter more
+  
+  # Require N expert agreements before acting
+  min_expert_consensus: 2
+  
+  # Don't auto-tune, just generate recommendations
+  auto_tune: false
+  generate_recommendations: true
+
