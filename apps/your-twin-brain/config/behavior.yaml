@@ -1,0 +1,10 @@
+# Behavior configuration for the twin-brain bot
+
+personality:
+  tone: "Be concise and professional"
+  emoji_usage: "minimal"  # Options: "minimal", "moderate", "frequent"
+
+rate_limits:
+  qa_calls_per_minute: 12
+  classify_calls_per_minute: 8
+

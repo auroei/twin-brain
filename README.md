@@ -11,7 +11,7 @@
 - **Three-role RBAC** — Curators, Teachers, Users with differentiated permissions and feedback weights
 - **Eval framework** — golden dataset, LLM-as-judge, precision/recall/MRR metrics
 - **Config-driven architecture** — YAML configs + Jinja2 prompt templates, no code changes needed for tuning
-- **Monorepo** — reusable core library (`memex-core`) separated from the application layer (`cards-memex`)
+- **Monorepo** — reusable core library (`memex-core`) separated from the application layer (`your-twin-brain`)
 
 ---
 
@@ -30,16 +30,12 @@
 ## Quick Start
 
 ```bash
-# 1. Install dependencies
-pip install -r requirements.txt
-pip install -e libs/memex-core
-
-# 2. Configure environment (see Setup section)
-cp apps/cards-memex/.env.example apps/cards-memex/.env
-# Edit .env with your tokens
-
-# 3. Run
-bash run.sh
+# 1. Create a Slack app from the manifest (see Setup section below)
+# 2. Get a Gemini API key from https://aistudio.google.com/app/apikey
+# 3. Run interactive setup (installs deps, validates tokens, writes .env)
+python setup.py
+# 4. Start the bot
+bash apps/your-twin-brain/run.sh
 ```
 
 ---
@@ -48,7 +44,7 @@ bash run.sh
 
 ```
 twin-brain/
-├── apps/cards-memex/           # Application Layer
+├── apps/your-twin-brain/       # Application Layer
 │   ├── main.py                 # Slack bot entry point
 │   ├── catchup.py              # Memory refresh script
 │   ├── config/                 # Configuration files
@@ -61,7 +57,7 @@ twin-brain/
 │   │   ├── gaps.yaml           # Known gaps & out-of-scope
 │   │   ├── ux.yaml             # User-facing messages
 │   │   └── prompts/            # Jinja2 prompt templates
-│   ├── src/cards_memex/        # Python package
+│   ├── src/twin_brain/         # Python package
 │   └── data/                   # Runtime data (gitignored)
 │       ├── knowledge_base/     # ChromaDB vector store
 │       └── watched_threads.json
@@ -141,56 +137,48 @@ score = semantic_score × recency × priority × (1 + feedback_score)
 - Slack workspace with bot creation permissions
 - Google Gemini API key
 
-### 2. Create Slack App
+### 2. Create Slack App (one-click with manifest)
 
 1. Go to [Slack API Apps](https://api.slack.com/apps)
-2. **Create New App** → **From scratch**
-3. Name it and select your workspace
+2. **Create New App** → **From a manifest**
+3. Select your workspace
+4. Paste the contents of [`apps/your-twin-brain/slack-app-manifest.yaml`](apps/your-twin-brain/slack-app-manifest.yaml)
+5. Click **Create** → **Install to Workspace**
 
-### 3. Configure Slack Scopes
+This pre-configures all scopes, Socket Mode, and event subscriptions automatically.
 
-**Bot Token Scopes** (OAuth & Permissions):
+After install, grab these two tokens:
+- **Bot Token** (`xoxb-...`): OAuth & Permissions page
+- **App-Level Token** (`xapp-...`): Basic Information → App-Level Tokens (create one with `connections:write` scope)
 
-| Scope | Purpose |
-|-------|---------|
-| `app_mentions:read` | Detect @mentions |
-| `channels:history` | Read channel messages |
-| `channels:join` | Join public channels |
-| `chat:write` | Send messages |
-| `groups:history` | Read private channels |
-| `im:history` | Read DM history |
-| `im:write` | Send DMs (**required for Q&A**) |
-| `reactions:read` | Receive reaction events |
-| `reactions:write` | Add 👀 reactions |
+### 3. Get a Gemini API Key
 
-After adding scopes → **Reinstall App**.
+Go to [Google AI Studio](https://aistudio.google.com/app/apikey) and create a key.
 
-### 4. Enable Socket Mode
-
-1. **Socket Mode** → Enable
-2. Create **App-Level Token** with `connections:write`
-3. Save token (starts with `xapp-`)
-
-### 5. Configure Environment
-
-Create `apps/cards-memex/.env`:
+### 4. Run Interactive Setup
 
 ```bash
-# Slack Credentials
-SLACK_BOT_TOKEN=xoxb-your-bot-token
-SLACK_APP_TOKEN=xapp-your-app-token
-
-# Google Gemini API Key
-GEMINI_API_KEY=AIza...your-key
-
-# Role-Based Access Control
-CURATOR_IDS=U000EXAMPLE1,U000EXAMPLE2
-TEACHER_IDS=U000EXAMPLE4,U000EXAMPLE5
+python setup.py
 ```
+
+The setup wizard will:
+1. Install Python dependencies
+2. Prompt for your Slack tokens and Gemini key (with live validation)
+3. Prompt for Curator and Teacher Slack user IDs
+4. Write the `.env` file
 
 **Get User IDs:** Slack profile → `...` → Copy member ID
 
-**Get Gemini Key:** [Google AI Studio](https://aistudio.google.com/app/apikey)
+<details>
+<summary>Manual .env setup (alternative)</summary>
+
+Copy the example and fill in your values:
+
+```bash
+cp apps/your-twin-brain/.env.example apps/your-twin-brain/.env
+```
+
+</details>
 
 ---
 
@@ -205,7 +193,7 @@ bash run.sh
 Expected output:
 
 ```
-⚡️ Cards-Strategy Bot - Startup Sequence
+⚡️ twin-brain Bot - Startup Sequence
 ============================================================
 ✅ Slack Authentication Successful
 ✅ ChromaDB Connected
@@ -273,7 +261,7 @@ React to any bot answer:
 
 ## Configuration
 
-All config in `apps/cards-memex/config/`:
+All config in `apps/your-twin-brain/config/`:
 
 | File | Purpose |
 |------|---------|
@@ -333,12 +321,12 @@ content_patterns:
 Refresh all watched threads:
 
 ```bash
-python apps/cards-memex/catchup.py
+python apps/your-twin-brain/catchup.py
 ```
 
 ### Scripts
 
-Located in `apps/cards-memex/scripts/`:
+Located in `apps/your-twin-brain/scripts/`:
 
 | Script | Purpose |
 |--------|---------|
@@ -382,10 +370,10 @@ Located in `apps/cards-memex/scripts/`:
 
 ```bash
 # Run tests
-python apps/cards-memex/scripts/test_api.py
+python apps/your-twin-brain/scripts/test_api.py
 
 # Run evals
-python apps/cards-memex/scripts/run_evals.py
+python apps/your-twin-brain/scripts/run_evals.py
 
 # Lint
 pip install ruff && ruff check .
@@ -394,7 +382,7 @@ pip install ruff && ruff check .
 ### Architecture Notes
 
 - `memex-core` is a reusable library (multi-bot capable)
-- `apps/cards-memex` is the Cards Strategy implementation
+- `apps/your-twin-brain` is the default application implementation
 - Embeddings: Google `text-embedding-004`
 - LLM: Gemini 2.0 Flash
 

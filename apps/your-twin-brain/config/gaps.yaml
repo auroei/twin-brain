@@ -1,0 +1,46 @@
+# Knowledge Gap Registry
+# Defines topics the bot can't answer and how to handle them gracefully
+
+# Known gaps: Topics where we KNOW we don't have info
+# Bot will respond with the redirect/response instead of hallucinating
+known_gaps:
+  - topic: "HR policies"
+    keywords: ["hr", "leave", "pto", "vacation", "sick leave", "holiday"]
+    response: "I don't have access to HR policies. Please check with the People team or visit the HR portal."
+    
+  - topic: "Compensation"
+    keywords: ["salary", "compensation", "bonus", "raise", "equity", "esop", "stock"]
+    response: "I don't have access to compensation information. Please speak with your manager or HR."
+    
+  - topic: "Legal matters"
+    keywords: ["legal", "lawsuit", "compliance", "regulatory", "rbi", "sebi"]
+    response: "For legal and regulatory matters, please consult with the Legal & Compliance team directly."
+    
+  - topic: "Personal data"
+    keywords: ["customer data", "pii", "personal information", "user data"]
+    response: "I cannot access or discuss individual customer data. Please use the appropriate internal tools with proper authorization."
+
+# Out-of-scope topics: Things the bot should politely decline
+out_of_scope:
+  - topic: "Personal advice"
+    keywords: ["personal", "advice", "should i", "what would you do", "recommend for me"]
+    response: "I'm designed to help with your team's work topics. For personal matters, I'd suggest speaking with a colleague or manager."
+    
+  - topic: "Other teams' work"
+    keywords: ["lending", "savings", "insurance", "wealth"]
+    response: "That topic is outside the domain I'm trained on. You might want to check with the relevant team."
+    
+  - topic: "Future predictions"
+    keywords: ["will we", "predict", "forecast", "next year", "future"]
+    response: "I can share what's been discussed, but I can't predict future outcomes. Check with leadership for forward-looking plans."
+
+# Ambiguity handling: When queries are too vague
+ambiguity:
+  min_query_length: 5  # Queries shorter than this get clarification request
+  clarification_prompt: "Could you be more specific? For example, are you asking about a particular project, product (CC/DC), or time period?"
+  
+# Staleness warning: When best results are old
+staleness:
+  warn_after_days: 30  # Warn if best match is older than this
+  warning_template: "Note: The most relevant information I found is from {age} ago. Things may have changed since then."
+

@@ -172,7 +172,7 @@ def _get_default_role_definition() -> RoleDefinition:
         Default RoleDefinition instance
     """
     return RoleDefinition(
-        role="Cards Strategy Lead",
+        role="Team Knowledge Lead",
         products=["Credit Cards (CC)", "Debit Cards (DC)", "Cross-Portfolio (Both)"],
         themes=[
             Theme(name="P&L & Financials", description="Revenue, cost of funds, yield, margins, budget planning."),
@@ -226,7 +226,7 @@ def load_role_definition(role_file: str = "role_definition.yaml") -> RoleDefinit
         
         # Create and return RoleDefinition
         return RoleDefinition(
-            role=role_data.get("role", "Cards Strategy Lead"),
+            role=role_data.get("role", "Team Knowledge Lead"),
             products=role_data.get("products", []),
             themes=themes,
             topics=role_data.get("topics", [])

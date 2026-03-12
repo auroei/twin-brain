@@ -1,0 +1,47 @@
+# Slack App Manifest for twin-brain
+#
+# Usage:
+#   1. Go to https://api.slack.com/apps
+#   2. Click "Create New App" -> "From a manifest"
+#   3. Select your workspace
+#   4. Paste this YAML and click "Create"
+#   5. Install the app to your workspace
+#   6. Copy the Bot Token (xoxb-...) from OAuth & Permissions
+#   7. Copy the App-Level Token (xapp-...) from Basic Information -> App-Level Tokens
+
+display_information:
+  name: twin-brain
+  description: A second brain for your team — indexes Slack threads and answers questions via RAG.
+  background_color: "#1a1a2e"
+
+features:
+  bot_user:
+    display_name: twin-brain
+    always_online: true
+
+oauth_config:
+  scopes:
+    bot:
+      - app_mentions:read
+      - channels:history
+      - channels:join
+      - chat:write
+      - groups:history
+      - im:history
+      - im:write
+      - reactions:read
+      - reactions:write
+
+settings:
+  event_subscriptions:
+    bot_events:
+      - app_mention
+      - message.channels
+      - message.groups
+      - message.im
+      - reaction_added
+  interactivity:
+    is_enabled: false
+  org_deploy_enabled: false
+  socket_mode_enabled: true
+  token_rotation_enabled: false

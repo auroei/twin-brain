@@ -220,7 +220,7 @@ Load and render externalized Jinja2 templates:
 from memex_core import load_prompt, render_prompt, set_app_prompts_dir
 
 # Use app-specific prompts (with fallback to library defaults)
-set_app_prompts_dir("apps/cards-memex/config/prompts")
+set_app_prompts_dir("apps/your-twin-brain/config/prompts")
 
 # Render a prompt
 prompt = render_prompt("answer", query="What is X?", context="X is a feature")

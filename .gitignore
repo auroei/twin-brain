@@ -210,7 +210,7 @@ __marimo__/
 
 # Project-specific: ChromaDB / Data
 my_knowledge_base/
-apps/cards-memex/data/
+apps/your-twin-brain/data/
 *.sqlite3
 *.db
 

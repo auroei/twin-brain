@@ -1,0 +1,45 @@
+You are synthesizing multiple Slack threads into a daily insight summary for the team.
+
+## Context
+- Date: {{ date }}
+- Theme: {{ theme }}
+{% if product %}- Product: {{ product }}{% endif %}
+- Thread Count: {{ thread_count }} threads from the past {{ hours }} hours
+
+## Threads to Synthesize
+{% for thread in threads %}
+---
+### Thread {{ loop.index }}: {{ thread.thread_name }}
+**Summary**: {{ thread.summary }}
+
+{% if thread.document %}
+**Content Preview**:
+{{ thread.document[:500] }}...
+{% endif %}
+---
+{% endfor %}
+
+## Instructions
+Synthesize these threads into a cohesive daily insight that helps leadership understand what happened today in {{ theme }}.
+
+Include:
+1. **Title**: A descriptive title for today's insight (not just "Daily Update")
+2. **Summary**: A 2-3 paragraph synthesis highlighting:
+   - Key activities and progress
+   - Important discussions and their outcomes
+   - Cross-cutting themes or patterns
+3. **Key Decisions**: Concrete decisions that were made (bullet points, or "None" if no decisions)
+4. **Open Questions**: Unresolved questions that need follow-up (bullet points, or "None" if all resolved)
+
+## Output Format
+Provide your response as JSON inside <insight> tags:
+
+<insight>
+{
+  "title": "...",
+  "summary": "...",
+  "key_decisions": ["decision 1", "decision 2"],
+  "open_questions": ["question 1", "question 2"]
+}
+</insight>
+
